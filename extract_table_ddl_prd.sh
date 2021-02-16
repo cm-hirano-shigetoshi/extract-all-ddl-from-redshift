@@ -27,10 +27,12 @@ DATABASE=dev
 USER=root
 TABLE_DDL_QUERY=$TOOL_DIR/extract_table_ddl.sql
 EXTERNAL_DDL_QUERY=$TOOL_DIR/extract_external_table_ddl.sql
+VIEW_DDL_QUERY=$TOOL_DIR/extract_view_ddl.sql
 
-export AWS_PROFILE=$1
 redshift -C $CLUSTER -D $DATABASE -U $USER -f $TABLE_DDL_QUERY | \
     python $TOOL_DIR/split_each_table.py -d $DDL_OUTPUT_DIR
 redshift -C $CLUSTER -D $DATABASE -U $USER -f $EXTERNAL_DDL_QUERY | \
     python $TOOL_DIR/split_each_table.py -d $DDL_OUTPUT_DIR
+redshift -C $CLUSTER -D $DATABASE -U $USER -f $VIEW_DDL_QUERY | \
+    python $TOOL_DIR/split_each_view.py -d $DDL_OUTPUT_DIR
 
